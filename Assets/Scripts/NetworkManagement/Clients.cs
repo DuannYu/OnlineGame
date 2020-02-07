@@ -143,10 +143,11 @@ public class Clients : MonoBehaviour {
         byte[] msgByte = new byte[1024];
         while (true) {
             try {
-                int msgLen = _clientSocket.Receive(msgByte);   
+//                int msgLen = _clientSocket.Receive(msgByte);
                     
                 // 消息置位要写在byte转换成str消息之后，否则消息处理线程可能会得到一个未转换的msg，也就是初始化的空串
-                _msgStr = Encoding.UTF8.GetString(msgByte, 0, msgLen);    
+//                _msgStr = Encoding.UTF8.GetString(msgByte, 0, msgLen);    
+                _msgStr = Message.ReceiveMessage(_clientSocket);
                 _msgFlag = true;
             }
             catch (System.Exception e) {
@@ -202,7 +203,8 @@ public class Clients : MonoBehaviour {
         if (message != null)
         {
             //Debug.Log(msgStr);
-            _clientSocket.Send(Encoding.UTF8.GetBytes(message));
+            string[] msg = {message};
+            _clientSocket.Send(Message.BuildDataPackage(1,2,3,4,5, msg));
         }
     }
 }

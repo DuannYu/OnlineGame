@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using GameServer;
 using UnityEngine;
 
 public class Servers : MonoBehaviour {
@@ -41,10 +42,10 @@ public class Servers : MonoBehaviour {
             _clientPosition.Add("_0_0_0*0*0*0");
             if (_clientList.Count > 1)
             {
-                client.Send(Encoding.UTF8.GetBytes("!" + _clientList.Count.ToString()));
+                client.Send(Message.BuildDataPackage(1,2,3,4,5, new string[] {"!" + _clientList.Count}));
                 for (int i = 1; i < _clientList.Count; i++)
                 {
-                    client.Send(Encoding.UTF8.GetBytes("|" + _clientPosition[i - 1]));
+                    client.Send(Message.BuildDataPackage(1,2,3,4,5, new string[] {"|" + _clientPosition[i - 1]}));
                 }
                 Broadcast(client, "@newCreated");
             }
@@ -65,9 +66,10 @@ public class Servers : MonoBehaviour {
         string msgStr = "";
         while (true) {
             try {
-                int msgLen = clientSocket.Receive(msgByte);
-                if (msgLen > 0) {
-                    msgStr = Encoding.UTF8.GetString(msgByte, 0, msgLen);
+//                int msgLen = clientSocket.Receive(msgByte);
+                msgStr = Message.ReceiveMessage(clientSocket);
+                if (msgStr != null) {
+//                    msgStr = Encoding.UTF8.GetString(msgByte, 0, msgLen);
                     // 收到客户端发来的位置信息
                     if (msgStr[0] == '_') {
                         int index = _clientList.FindIndex(item => item.Equals(clientSocket));
@@ -81,7 +83,8 @@ public class Servers : MonoBehaviour {
                         Broadcast(clientSocket, clientPoint.Address + "[" + clientPoint.Port + "]:" + msgStr);
                     }
                 }
-                clientSocket.Send(Encoding.UTF8.GetBytes("$ACK"));                    
+                clientSocket.Send(Message.BuildDataPackage(1,2,3,4,5, 
+                    new string[] {"$ACK"}));                    
             }
             catch (Exception e) {
                 int index = _clientList.FindIndex(item => item.Equals(clientSocket));
@@ -99,7 +102,7 @@ public class Servers : MonoBehaviour {
         Debug.Log("服务器广播" + msg);
         foreach (var item in _clientList) {
             if (item != clientID) {
-                item.Send(Encoding.UTF8.GetBytes(msg));
+                item.Send(Message.BuildDataPackage(1,2,3,4,5, new string[] {msg}));
             }
         }
     }
