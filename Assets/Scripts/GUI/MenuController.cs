@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour {
@@ -28,11 +29,10 @@ public class MenuController : MonoBehaviour {
 
     #region Silder Linking
     [Header("Menu Sliders")]
-    // TODO Brightness
-//    [SerializeField] private Brightness brightnessEffect;
-//    [SerializeField] private Slider brightnessSlider;
-//    [SerializeField] private Text brightnessText;
-//    [Space(10)]
+    [SerializeField] private Brightness brightnessEffect;
+    [SerializeField] private Slider brightnessSlider;
+    [SerializeField] private Text brightnessText;
+    [Space(10)]
     [SerializeField] private Text volumeText;
     [SerializeField] private Slider volumeSlider;
     #endregion
@@ -58,8 +58,7 @@ public class MenuController : MonoBehaviour {
     public void MouseClick(String buttonType) {
         // Default Menu
         if (buttonType == "Start") {
-            // TODO Load new Scene
-            Debug.Log("Load Scene");
+            SceneManager.LoadScene("Scenes/LobbyRoom");
         }
 
         if (buttonType == "Settings") {
@@ -125,6 +124,21 @@ public class MenuController : MonoBehaviour {
         Debug.Log(PlayerPrefs.GetFloat("masterVolume"));
         GoBackToSettingMenu();
     }
+
+    #endregion
+
+    #region Brightness Silders Click
+    public void BrightnessSlider() {
+//        brightnessEffect.brightness = brightnessSlider.value;
+        brightnessText.text = brightnessSlider.value.ToString("0.0");
+    }
+
+    public void BrightnessApply() {
+        PlayerPrefs.SetFloat("masterBrightness", brightnessEffect.brightness);
+        Debug.Log(PlayerPrefs.GetFloat("masterBrightness"));
+        GoBackToSettingMenu();
+    }
+    
 
     #endregion
 
