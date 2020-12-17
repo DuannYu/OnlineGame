@@ -18,8 +18,6 @@ public class CustomNetworkManager : NetworkManager
 
     private void Update() {
         // 更换实例化对象
-        if (Input.GetKeyDown("o"))
-            playerPrefabIndex = 2;
     }
 
     public override void OnClientConnect(NetworkConnection conn)

@@ -58,6 +58,7 @@ public class MenuController : MonoBehaviour {
     public void MouseClick(String buttonType) {
         // Default Menu
         if (buttonType == "Start") {
+            Debug.Log("start");
             SceneManager.LoadScene("Scenes/LobbyRoom");
         }
 
